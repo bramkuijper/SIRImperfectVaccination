@@ -16,6 +16,7 @@
 //' @param r2 anti-growth rate immunity (floating-point value)
 //' @param r3 transmission-blocking immunity (floating-point value)
 //' @param r4 anti-toxin immunity (floating-point value)
+//' @param sigma rate of superinfection (floating-point value)
 //' @return A \code{list} that contains the values of the equilibrium 
 //'     densities x, x', y, y' and virulence alpha
 //' @examples
@@ -32,23 +33,31 @@
 //'                         r1=0,
 //'                         r2=0,
 //'                         r3=0,
-//'                         r4=0)
+//'                         r4=0,
+//'                         sigma=0,
+//'                         maxt=50000)
 //'
 //' @export 
 // [[Rcpp::export]]
 Rcpp::DataFrame SIRsolver(
          double density_init=100,
-         double f=0.3,
+         double f=0.2,
          double lambda=25,
          double delta=1,
-         double b1=1,
-         double b2=0.5,
-         double c1=1,
-         double c2=0.2,
+         double b1=0.5,
+         double b2=0.2,
+         double c1=0,
+         double c2=0,
          double r1=0.0,
          double r2=0.0,
          double r3=0.0,
-         double r4=0.0)
+         double r4=0.0,
+         double sigma=0.0,
+         int maxt_eco = 1e08,
+         int maxt_evo = 1e08,
+         double alpha_init = 1.0,
+         double eul_eco = 0.001,
+         double eul_evo = 0.01)
 {
     // initialize a struct with parameters
     Params pars;
@@ -65,11 +74,16 @@ Rcpp::DataFrame SIRsolver(
     pars.r2 = r2;
     pars.r3 = r3;
     pars.r4 = r4;
+    pars.sigma = sigma;
+    pars.alpha_init = alpha_init;
+    pars.maxt_evo = maxt_evo;
+    pars.maxt_eco = maxt_eco;
+    pars.eul_eco = eul_eco;
+    pars.eul_evo = eul_evo;
 
     Solver simulateSIR(pars);
 
-    Rcpp::DataFrame output = simulateSIR.run();
+    Rcpp::DataFrame output = simulateSIR.run_sep_timescale();
 
     return(output);
 } // end SIRsolver
-        

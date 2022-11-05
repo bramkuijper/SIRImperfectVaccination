@@ -16,6 +16,7 @@
 #' @param r2 anti-growth rate immunity (floating-point value)
 #' @param r3 transmission-blocking immunity (floating-point value)
 #' @param r4 anti-toxin immunity (floating-point value)
+#' @param sigma rate of superinfection (floating-point value)
 #' @return A \code{list} that contains the values of the equilibrium 
 #'     densities x, x', y, y' and virulence alpha
 #' @examples
@@ -32,10 +33,12 @@
 #'                         r1=0,
 #'                         r2=0,
 #'                         r3=0,
-#'                         r4=0)
+#'                         r4=0,
+#'                         sigma=0,
+#'                         maxt=50000)
 #'
 #' @export 
-SIRsolver <- function(density_init = 100, f = 0.3, lambda = 25, delta = 1, b1 = 1, b2 = 0.5, c1 = 1, c2 = 0.2, r1 = 0.0, r2 = 0.0, r3 = 0.0, r4 = 0.0) {
-    .Call(`_SIRImperfectVaccination_SIRsolver`, density_init, f, lambda, delta, b1, b2, c1, c2, r1, r2, r3, r4)
+SIRsolver <- function(density_init = 100, f = 0.2, lambda = 25, delta = 1, b1 = 0.5, b2 = 0.2, c1 = 0, c2 = 0, r1 = 0.0, r2 = 0.0, r3 = 0.0, r4 = 0.0, sigma = 0.0, maxt_eco = 1e08L, maxt_evo = 1e08L, alpha_init = 1.0, eul_eco = 0.001, eul_evo = 0.01) {
+    .Call('_SIRImperfectVaccination_SIRsolver', PACKAGE = 'SIRImperfectVaccination', density_init, f, lambda, delta, b1, b2, c1, c2, r1, r2, r3, r4, sigma, maxt_eco, maxt_evo, alpha_init, eul_eco, eul_evo)
 }
 
