@@ -57,7 +57,8 @@ Rcpp::DataFrame SIRsolver(
          int maxt_evo = 1e08,
          double alpha_init = 1.0,
          double eul_eco = 0.001,
-         double eul_evo = 0.01)
+         double eul_evo = 0.01,
+         bool all_data = false)
 {
     // initialize a struct with parameters
     Params pars;
@@ -80,6 +81,7 @@ Rcpp::DataFrame SIRsolver(
     pars.maxt_eco = maxt_eco;
     pars.eul_eco = eul_eco;
     pars.eul_evo = eul_evo;
+    pars.all_data = all_data;
 
     Solver simulateSIR(pars);
 

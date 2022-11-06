@@ -201,6 +201,16 @@ Rcpp::DataFrame Solver::run_sep_timescale()
 
     int evol_time_step;
 
+    int vector_size = params.all_data ? params.maxt_evo : 1;
+
+    // allocate vectors to fill the dataframe
+    Rcpp::NumericVector time_steps_vec(vector_size);
+    Rcpp::NumericVector x_vec(vector_size);
+    Rcpp::NumericVector y_vec(vector_size);
+    Rcpp::NumericVector xprime_vec(vector_size);
+    Rcpp::NumericVector yprime_vec(vector_size);
+    Rcpp::NumericVector alpha_vec(vector_size);
+
     for (evol_time_step = 0; evol_time_step < params.maxt_evo; ++evol_time_step)
     {
         solve_ecol_dynamic();
@@ -232,16 +242,36 @@ Rcpp::DataFrame Solver::run_sep_timescale()
         {
             Rcpp::checkUserInterrupt();
         }
+        if (params.all_data)
+        {
+            time_steps_vec[evol_time_step] = evol_time_step;
+            x_vec[evol_time_step] = x;
+            xprime_vec[evol_time_step] = xprime;
+            y_vec[evol_time_step] = y;
+            yprime_vec[evol_time_step] = yprime;
+            alpha_vec[evol_time_step] = alpha;
+        }
     } // end for int evol time
 
+    if (!params.all_data)
+    {
+        time_steps_vec[0] = evol_time_step;
+        x_vec[0] = x;
+        xprime_vec[0] = xprime;
+        y_vec[0] = y;
+        yprime_vec[0] = yprime;
+        alpha_vec[0] = alpha;
+    }
+    
     Rcpp::DataFrame df = Rcpp::DataFrame::create(
-            Rcpp::Named("t_converge") = evol_time_step
-            ,Rcpp::Named("x") = x
-            ,Rcpp::Named("xprime") = xprime
-            ,Rcpp::Named("y") = y
-            ,Rcpp::Named("yprime") = yprime
-            ,Rcpp::Named("alpha") = alpha
+            Rcpp::Named("t_converge") = time_steps_vec
+            ,Rcpp::Named("x") = x_vec
+            ,Rcpp::Named("xprime") = xprime_vec
+            ,Rcpp::Named("y") = y_vec
+            ,Rcpp::Named("yprime") = yprime_vec
+            ,Rcpp::Named("alpha") = alpha_vec
             );
+
     return(df);
 
 } // end solve_SIR_alpha

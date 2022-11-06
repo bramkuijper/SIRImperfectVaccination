@@ -11,8 +11,8 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // SIRsolver
-Rcpp::DataFrame SIRsolver(double density_init, double f, double lambda, double delta, double b1, double b2, double c1, double c2, double r1, double r2, double r3, double r4, double sigma, int maxt_eco, int maxt_evo, double alpha_init, double eul_eco, double eul_evo);
-RcppExport SEXP _SIRImperfectVaccination_SIRsolver(SEXP density_initSEXP, SEXP fSEXP, SEXP lambdaSEXP, SEXP deltaSEXP, SEXP b1SEXP, SEXP b2SEXP, SEXP c1SEXP, SEXP c2SEXP, SEXP r1SEXP, SEXP r2SEXP, SEXP r3SEXP, SEXP r4SEXP, SEXP sigmaSEXP, SEXP maxt_ecoSEXP, SEXP maxt_evoSEXP, SEXP alpha_initSEXP, SEXP eul_ecoSEXP, SEXP eul_evoSEXP) {
+Rcpp::DataFrame SIRsolver(double density_init, double f, double lambda, double delta, double b1, double b2, double c1, double c2, double r1, double r2, double r3, double r4, double sigma, int maxt_eco, int maxt_evo, double alpha_init, double eul_eco, double eul_evo, bool all_data);
+RcppExport SEXP _SIRImperfectVaccination_SIRsolver(SEXP density_initSEXP, SEXP fSEXP, SEXP lambdaSEXP, SEXP deltaSEXP, SEXP b1SEXP, SEXP b2SEXP, SEXP c1SEXP, SEXP c2SEXP, SEXP r1SEXP, SEXP r2SEXP, SEXP r3SEXP, SEXP r4SEXP, SEXP sigmaSEXP, SEXP maxt_ecoSEXP, SEXP maxt_evoSEXP, SEXP alpha_initSEXP, SEXP eul_ecoSEXP, SEXP eul_evoSEXP, SEXP all_dataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -34,13 +34,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type alpha_init(alpha_initSEXP);
     Rcpp::traits::input_parameter< double >::type eul_eco(eul_ecoSEXP);
     Rcpp::traits::input_parameter< double >::type eul_evo(eul_evoSEXP);
-    rcpp_result_gen = Rcpp::wrap(SIRsolver(density_init, f, lambda, delta, b1, b2, c1, c2, r1, r2, r3, r4, sigma, maxt_eco, maxt_evo, alpha_init, eul_eco, eul_evo));
+    Rcpp::traits::input_parameter< bool >::type all_data(all_dataSEXP);
+    rcpp_result_gen = Rcpp::wrap(SIRsolver(density_init, f, lambda, delta, b1, b2, c1, c2, r1, r2, r3, r4, sigma, maxt_eco, maxt_evo, alpha_init, eul_eco, eul_evo, all_data));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_SIRImperfectVaccination_SIRsolver", (DL_FUNC) &_SIRImperfectVaccination_SIRsolver, 18},
+    {"_SIRImperfectVaccination_SIRsolver", (DL_FUNC) &_SIRImperfectVaccination_SIRsolver, 19},
     {NULL, NULL, 0}
 };
 

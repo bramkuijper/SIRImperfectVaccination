@@ -24,6 +24,7 @@ struct Params
     int maxt_eco = 5;
     double convergence_limit = 1e-07;
     double alpha_init = 1.0;
+    bool all_data = false;
 };
 
 class Solver
