@@ -5,7 +5,8 @@
 
 struct Params
 {
-    double density_init=100;
+    double n_susceptible_init=100;
+    double n_infected_init=100;
     double delta = 1;
     double lambda = 25;
     double f = 0.2;

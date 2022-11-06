@@ -72,7 +72,7 @@ double Solver::hprime(double const v)
 
 double Solver::dR0dalpha(double const v)
 {
-    double dR0dv_part1 = (dbeta_dv(v) * (x + params.sigma * y) * (params.delta + v + chi(v) + params.sigma * h(v)) - beta(v) * (x + params.sigma * y) * (1 + dchi_dv(v))) / 
+    double dR0dv_part1 = (dbeta_dv(v) * (x + params.sigma * y) * (params.delta + v + chi(v) + params.sigma * h(v)) - beta(v) * (x + params.sigma * y) * (1 + dchi_dv(v))) /
         pow(params.delta + v + chi(v) + params.sigma * h(v),2.0);
 
     double dR0dv_part2 = (
@@ -92,10 +92,10 @@ double Solver::dR0dalpha(double const v)
 
 Solver::Solver(Params const &parameters) :
     params{parameters}
-    ,x{params.density_init * (1.0 - params.f)}
-    ,xprime{params.density_init * params.f}
-    ,y{params.density_init * (1.0 - params.f)}
-    ,yprime{params.density_init * params.f}
+    ,x{params.n_susceptible_init * (1.0 - params.f)}
+    ,xprime{params.n_susceptible_init * params.f}
+    ,y{params.n_infected_init * (1.0 - params.f)}
+    ,yprime{params.n_infected_init * params.f}
     ,alpha{params.alpha_init}
 {} // end Solver
 
@@ -105,21 +105,21 @@ void Solver::solve_ecol_dynamic()
     double xtplus1, xprimetplus1, ytplus1, yprimetplus1;
     bool converged_ecol;
 
-    for (int ecol_time_step = 0; ecol_time_step < params.maxt_eco; 
+    for (int ecol_time_step = 0; ecol_time_step < params.maxt_eco;
             ++ecol_time_step)
     {
         // work out eq. 6 from Gandon et al 2001
-        dxdt = (1.0 - params.f) * params.lambda - 
+        dxdt = (1.0 - params.f) * params.lambda -
                     (params.delta + h(alpha)) * x + chi(alpha) * y;
 
 
-        dxprimedt = params.f * params.lambda - 
-                    (params.delta + hprime(alpha)) * xprime 
+        dxprimedt = params.f * params.lambda -
+                    (params.delta + hprime(alpha)) * xprime
                     + chiprime(alpha) * yprime;
 
         dydt = h(alpha) * x - (params.delta + alpha + chi(alpha)) * y;
 
-        dyprimedt = hprime(alpha) * xprime - 
+        dyprimedt = hprime(alpha) * xprime -
             (params.delta + alphaprime(alpha) + chiprime(alpha) ) * yprime;
 
         xtplus1 = x + params.eul_eco * dxdt;
@@ -163,12 +163,12 @@ void Solver::solve_ecol_dynamic()
         {
             converged_ecol = false;
         }
-        
+
         if (std::fabs(xprimetplus1 - xprime) > params.convergence_limit)
         {
             converged_ecol = false;
         }
-        
+
         if (std::fabs(yprimetplus1 - yprime) > params.convergence_limit)
         {
             converged_ecol = false;
@@ -223,9 +223,9 @@ Rcpp::DataFrame Solver::run_sep_timescale()
         {
             alphatplus1 = 0.0;
         }
-        
+
         converged_evol = true;
-        
+
         if (std::fabs(alphatplus1 - alpha) > params.convergence_limit)
         {
             converged_evol = false;
@@ -237,7 +237,7 @@ Rcpp::DataFrame Solver::run_sep_timescale()
         {
             break;
         }
-        
+
         if (evol_time_step % 1000 == 0)
         {
             Rcpp::checkUserInterrupt();
@@ -262,7 +262,7 @@ Rcpp::DataFrame Solver::run_sep_timescale()
         yprime_vec[0] = yprime;
         alpha_vec[0] = alpha;
     }
-    
+
     Rcpp::DataFrame df = Rcpp::DataFrame::create(
             Rcpp::Named("t_converge") = time_steps_vec
             ,Rcpp::Named("x") = x_vec
