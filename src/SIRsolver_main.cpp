@@ -66,7 +66,7 @@ Rcpp::DataFrame SIRsolver(
 
     // initialize densities
     pars.n_susceptible_init = n_susceptible_init;
-    pars.n_infected_init = n_susceptible_init;
+    pars.n_infected_init = n_infected_init;
 
     pars.f = f;
     pars.lambda = lambda;

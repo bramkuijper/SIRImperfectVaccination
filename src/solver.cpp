@@ -213,6 +213,16 @@ Rcpp::DataFrame Solver::run_sep_timescale()
 
     for (evol_time_step = 0; evol_time_step < params.maxt_evo; ++evol_time_step)
     {
+        if (params.all_data)
+        {
+            time_steps_vec[evol_time_step] = evol_time_step;
+            x_vec[evol_time_step] = x;
+            xprime_vec[evol_time_step] = xprime;
+            y_vec[evol_time_step] = y;
+            yprime_vec[evol_time_step] = yprime;
+            alpha_vec[evol_time_step] = alpha;
+        }
+
         solve_ecol_dynamic();
 
         alphatplus1 = alpha + params.eul_evo * dR0dalpha(alpha);
@@ -241,15 +251,6 @@ Rcpp::DataFrame Solver::run_sep_timescale()
         if (evol_time_step % 1000 == 0)
         {
             Rcpp::checkUserInterrupt();
-        }
-        if (params.all_data)
-        {
-            time_steps_vec[evol_time_step] = evol_time_step;
-            x_vec[evol_time_step] = x;
-            xprime_vec[evol_time_step] = xprime;
-            y_vec[evol_time_step] = y;
-            yprime_vec[evol_time_step] = yprime;
-            alpha_vec[evol_time_step] = alpha;
         }
     } // end for int evol time
 
